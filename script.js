@@ -8,6 +8,11 @@ const scaledCanvas = {
     width: canvas.width / 4,
     height: canvas.height / 4
 }
+
+const floorCollisions2D = []
+for (let i = 0; i < floorCollisions.length; i += 36) {
+    floorCollisions2D.push(floorCollisions.slice())
+}
 const gravity = 0.5
 
 class Sprite {
@@ -73,7 +78,6 @@ const background = new Sprite({
     },
     imageSrc: './images/background.png'
 })
-
 function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'white'
