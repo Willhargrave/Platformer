@@ -1,5 +1,12 @@
 class Player extends Sprite {
-    constructor({ position, collisionBlocks, imageSrc, frameRate, scale = 0.5, animations }) {
+    constructor({ position,
+        collisionBlocks,
+        platformCollisionBlocks,
+        imageSrc,
+        frameRate,
+        scale = 0.5,
+        animations
+    }) {
         super({ imageSrc, frameRate, scale })
         this.position = position
         this.velocity = {
@@ -9,6 +16,7 @@ class Player extends Sprite {
         // this.width = 100 / 4
         // this.height = 100 / 4
         this.collisionBlocks = collisionBlocks
+        this.platformCollisionBlocks = platformCollisionBlocks
         this.hitbox = {
             position: {
                 x: this.position.x,
@@ -29,8 +37,9 @@ class Player extends Sprite {
     }
 
     switchSprite(key) {
-        if (this.image === this.animations[key] || !this.loaded) return
-        
+        if (this.image === this.animations[key].image || !this.loaded) return
+
+        this.currenFrame = 0
         this.image = this.animations[key].image
         this.frameBuffer = this.animations[key].frameBuffer
         this.frameRate = this.animations[key].frameRate
@@ -125,6 +134,28 @@ class Player extends Sprite {
                     const offset = this.hitbox.position.y - this.position.y
                     this.velocity.y = 0
                     this.position.y = collisionBlock.position.y - offset + 0.01
+                    break
+                }
+            }
+        }
+
+
+        for (let i = 0; i < this.platformCollisionBlocks.length; i++) {
+            const platformCollisionBlock = this.platformCollisionBlocks[i]
+
+            if (
+                platformCollision(
+                    {
+                        object1: this.hitbox,
+                        object2: platformCollisionBlock
+                    })
+            ) {
+                if (this.velocity.y > 0) {
+                    this.velocity.y = 0
+
+                    const offset = this.hitbox.position.y - this.position.y + this.hitbox.height
+
+                    this.position.y = platformCollisionBlock.position.y - offset - 0.01
                     break
                 }
             }
