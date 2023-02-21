@@ -56,11 +56,53 @@ const gravity = 0.5
 const player = new Player({
     position: {
         x: 100,
-        y: 0
+        y: 300
     },
     collisionBlocks,
-    imageSrc: './images/warrior/idle.png',
-    frameRate: 8
+    imageSrc: './images/warrior/Idle.png',
+    frameRate: 8,
+    animations: {
+        Idle: {
+            imageSrc: "./images/warrior/Idle.png",
+            frameRate: 8,
+            frameBuffer: 3,
+        },
+        IdleLeft: {
+            imageSrc: "./images/warrior/Idle.png",
+            frameRate: 8,
+            frameBuffer: 3,
+        },
+        Run: {
+            imageSrc: "./images/warrior/Run.png",
+            frameRate: 8,
+            frameBuffer: 5,
+        },
+        RunLeft: {
+            imageSrc: "./images/warrior/RunLeft.png",
+            frameRate: 8,
+            frameBuffer: 5,
+        },
+        Jump: {
+            imageSrc: "./images/warrior/Jump.png",
+            frameRate: 2,
+            frameBuffer: 3,
+        },
+        JumpLeft: {
+            imageSrc: "./images/warrior/JumpLeft.png",
+            frameRate: 2,
+            frameBuffer: 3,
+        },
+        Fall: {
+            imageSrc: "./images/warrior/Fall.png",
+            frameRate: 2,
+            frameBuffer: 3,
+        },
+        FallLeft: {
+            imageSrc: "./images/warrior/FallLeft.png",
+            frameRate: 2,
+            frameBuffer: 3,
+        }
+    }
 })
 
 const keys = {
@@ -97,8 +139,26 @@ function animate() {
     player.playerUpdate()
 
     player.velocity.x = 0
-    if (keys.d.pressed) player.velocity.x = 5
-    else if (keys.a.pressed) player.velocity.x = -5
+    if (keys.d.pressed) {
+        player.switchSprite('Run')
+        player.velocity.x = 2
+    }
+    else if (keys.a.pressed) {
+        player.switchSprite('RunLeft')
+        player.velocity.x = -2
+    }
+    else if (player.velocity.y === 0) {
+        player.switchSprite('Idle')
+    }
+
+    if (player.velocity.y < 0) {
+        player.switchSprite('Jump')
+        if (keys.a.pressed) player.switchSprite("JumpLeft")
+    }
+    else if (player.velocity.y > 0) {
+        player.switchSprite('Fall')
+        if (keys.a.pressed) player.switchSprite("FallLeft")
+    }
     c.restore()
 
 }
